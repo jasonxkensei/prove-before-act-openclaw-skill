@@ -1,6 +1,6 @@
 ---
 name: xproof
-description: Certify files on MultiversX blockchain via xProof. Use when the user wants to prove file existence, create a proof of ownership, certify a document or code artifact, verify an existing certification, or anchor agent outputs on-chain. Supports single file, batch (up to 50 files), and x402 payment (no API key needed). $0.05 per proof.
+description: Certify files on MultiversX blockchain via xProof. Use when the user wants to prove file existence, create a proof of ownership, certify a document or code artifact, verify an existing certification, or anchor agent outputs on-chain. Supports single file, batch (up to 50 files), and x402 payment (no API key needed). Starting at $0.05 per proof, price decreases as the network grows. See https://xproof.app/api/pricing
 ---
 
 # xProof: Blockchain Certification on MultiversX
@@ -147,8 +147,9 @@ Returns available services, pricing, and capabilities. No authentication require
 
 ## Costs
 
-- **$0.05 per certification**, paid in EGLD (with API key) or USDC on Base (with x402)
-- Free tier available for testing
+- **Starting at $0.05 per certification** — price decreases globally as the network grows
+- Paid in EGLD (with API key) or USDC on Base (with x402)
+- Current pricing & tiers: https://xproof.app/api/pricing
 
 ## Webhook Notifications
 
