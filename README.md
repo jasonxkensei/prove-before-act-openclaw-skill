@@ -41,8 +41,7 @@ Supports x402 (HTTP-native payments), ACP, MCP, and MX-8004.
 
 ## Cost
 
-Starting at $0.05 per certification — price decreases as the network grows.
-Current pricing: https://xproof.app/api/pricing
+$0.05 per certification.
 
 ## Links
 
