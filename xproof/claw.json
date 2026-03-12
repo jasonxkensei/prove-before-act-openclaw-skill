@@ -1,14 +1,14 @@
 {
   "name": "xproof",
-  "version": "2.0.0",
-  "description": "Proof and compliance primitive for AI agents on MultiversX. Certify file existence and ownership on-chain, and enforce pre-execution audit logging for critical agent actions. No proof → no action.",
+  "version": "3.0.0",
+  "description": "Proof and accountability layer for AI agents. Anchor verifiable proofs on MultiversX, enforce pre-execution audit logging, detect violations on Base. No proof = no action.",
   "author": "jasonxkensei",
   "homepage": "https://xproof.app",
   "repository": "https://github.com/jasonxkensei/xproof-openclaw-skill",
   "tools": [
     {
       "name": "certify_file",
-      "description": "Create a blockchain certification for a file. Records the SHA-256 hash on MultiversX as immutable proof of existence and ownership. Cost: $0.05 per certification.",
+      "description": "Anchor a file hash on MultiversX as immutable proof of existence and ownership. Records the SHA-256 hash on-chain with 6-second finality. Cost: $0.05 per proof.",
       "parameters": {
         "type": "object",
         "required": ["file_hash", "filename"],
@@ -24,7 +24,7 @@
           },
           "author_name": {
             "type": "string",
-            "description": "Name of the certifier (default: AI Agent)"
+            "description": "Name of the proof submitter (default: AI Agent)"
           },
           "webhook_url": {
             "type": "string",
@@ -35,28 +35,28 @@
     },
     {
       "name": "verify_proof",
-      "description": "Verify an existing xProof certification. Returns proof details including file hash, timestamp, blockchain transaction, and verification status.",
+      "description": "Verify an existing xProof record. Returns proof details including file hash, timestamp, blockchain transaction, and verification status.",
       "parameters": {
         "type": "object",
         "required": ["proof_id"],
         "properties": {
           "proof_id": {
             "type": "string",
-            "description": "UUID of the certification to verify"
+            "description": "UUID of the proof to verify"
           }
         }
       }
     },
     {
       "name": "batch_certify",
-      "description": "Certify up to 50 files in a single API call. Each file requires a SHA-256 hash and filename.",
+      "description": "Anchor up to 50 file proofs in a single API call. Each file requires a SHA-256 hash and filename.",
       "parameters": {
         "type": "object",
         "required": ["files"],
         "properties": {
           "files": {
             "type": "array",
-            "description": "Array of files to certify (max 50)",
+            "description": "Array of files to anchor (max 50)",
             "items": {
               "type": "object",
               "required": ["file_hash", "filename"],
@@ -84,7 +84,7 @@
         "properties": {
           "proof_id": {
             "type": "string",
-            "description": "UUID of the certification"
+            "description": "UUID of the proof"
           },
           "format": {
             "type": "string",
@@ -96,7 +96,7 @@
     },
     {
       "name": "discover_services",
-      "description": "Discover available xProof certification services, pricing, and capabilities. No authentication required.",
+      "description": "Discover available xProof services, pricing, and capabilities. No authentication required.",
       "parameters": {
         "type": "object",
         "properties": {}
@@ -104,14 +104,14 @@
     },
     {
       "name": "audit_agent_session",
-      "description": "Certify an agent audit log on-chain BEFORE executing a critical action. The audit log captures agent identity, action intent, risk assessment, and decision. If this call fails or returns no proof_id, the agent MUST NOT proceed. This is the enforcement primitive for the Agent Audit Log Standard.",
+      "description": "Anchor an agent audit log on-chain BEFORE executing a critical action. The audit log captures agent identity, action intent, risk assessment, and decision. If this call fails or returns no proof_id, the agent MUST NOT proceed. This is the enforcement primitive for the Agent Audit Log Standard.",
       "parameters": {
         "type": "object",
         "required": ["agent_id", "session_id", "action_type", "action_description", "inputs_hash", "risk_level", "decision"],
         "properties": {
           "agent_id": {
             "type": "string",
-            "description": "Unique identifier for the agent (wallet address or DID)"
+            "description": "Unique identifier for the agent (wallet address, DID, or free string)"
           },
           "session_id": {
             "type": "string",
@@ -166,7 +166,7 @@
       "x402": {
         "chain": "Base (eip155:8453)",
         "token": "USDC",
-        "cost_per_certification": "$0.05"
+        "cost_per_proof": "$0.05"
       }
     }
   }
