@@ -1,161 +1,11 @@
 {
   "name": "xproof",
   "version": "3.0.0",
-  "description": "Proof and accountability layer for AI agents. Anchor verifiable proofs on MultiversX, enforce pre-execution audit logging, detect violations on Base. No proof = no action.",
+  "description": "Proof and accountability layer for AI agents. Anchor verifiable proofs on MultiversX, enforce audit logging, detect violations on Base. All-time volume pricing: starts at $0.05.",
   "author": "jasonxkensei",
   "homepage": "https://xproof.app",
   "repository": "https://github.com/jasonxkensei/xproof-openclaw-skill",
-  "tools": [
-    {
-      "name": "certify_file",
-      "description": "Anchor a file hash on MultiversX as immutable proof of existence and ownership. Records the SHA-256 hash on-chain with 6-second finality. Cost: $0.05 per proof.",
-      "parameters": {
-        "type": "object",
-        "required": ["file_hash", "filename"],
-        "properties": {
-          "file_hash": {
-            "type": "string",
-            "description": "SHA-256 hash of the file (64 hex characters)",
-            "pattern": "^[a-fA-F0-9]{64}$"
-          },
-          "filename": {
-            "type": "string",
-            "description": "Original filename with extension"
-          },
-          "author_name": {
-            "type": "string",
-            "description": "Name of the proof submitter (default: AI Agent)"
-          },
-          "webhook_url": {
-            "type": "string",
-            "description": "HTTPS URL for on-chain confirmation callback (signed HMAC-SHA256)"
-          }
-        }
-      }
-    },
-    {
-      "name": "verify_proof",
-      "description": "Verify an existing xProof record. Returns proof details including file hash, timestamp, blockchain transaction, and verification status.",
-      "parameters": {
-        "type": "object",
-        "required": ["proof_id"],
-        "properties": {
-          "proof_id": {
-            "type": "string",
-            "description": "UUID of the proof to verify"
-          }
-        }
-      }
-    },
-    {
-      "name": "batch_certify",
-      "description": "Anchor up to 50 file proofs in a single API call. Each file requires a SHA-256 hash and filename.",
-      "parameters": {
-        "type": "object",
-        "required": ["files"],
-        "properties": {
-          "files": {
-            "type": "array",
-            "description": "Array of files to anchor (max 50)",
-            "items": {
-              "type": "object",
-              "required": ["file_hash", "filename"],
-              "properties": {
-                "file_hash": {
-                  "type": "string",
-                  "description": "SHA-256 hash of the file (64 hex characters)"
-                },
-                "filename": {
-                  "type": "string",
-                  "description": "Original filename with extension"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    {
-      "name": "get_proof",
-      "description": "Retrieve a proof in structured JSON or Markdown format. Use JSON for machine processing, Markdown for LLM consumption.",
-      "parameters": {
-        "type": "object",
-        "required": ["proof_id"],
-        "properties": {
-          "proof_id": {
-            "type": "string",
-            "description": "UUID of the proof"
-          },
-          "format": {
-            "type": "string",
-            "enum": ["json", "md"],
-            "description": "Output format: json or md (default: json)"
-          }
-        }
-      }
-    },
-    {
-      "name": "discover_services",
-      "description": "Discover available xProof services, pricing, and capabilities. No authentication required.",
-      "parameters": {
-        "type": "object",
-        "properties": {}
-      }
-    },
-    {
-      "name": "audit_agent_session",
-      "description": "Anchor an agent audit log on-chain BEFORE executing a critical action. The audit log captures agent identity, action intent, risk assessment, and decision. If this call fails or returns no proof_id, the agent MUST NOT proceed. This is the enforcement primitive for the Agent Audit Log Standard.",
-      "parameters": {
-        "type": "object",
-        "required": ["agent_id", "session_id", "action_type", "action_description", "inputs_hash", "risk_level", "decision"],
-        "properties": {
-          "agent_id": {
-            "type": "string",
-            "description": "Unique identifier for the agent (wallet address, DID, or free string)"
-          },
-          "session_id": {
-            "type": "string",
-            "description": "UUID identifying this execution session"
-          },
-          "action_type": {
-            "type": "string",
-            "description": "Category of action (e.g. trade, deploy, data_access, transfer, api_call)"
-          },
-          "action_description": {
-            "type": "string",
-            "description": "Human-readable description of what the agent intends to do"
-          },
-          "inputs_hash": {
-            "type": "string",
-            "description": "SHA-256 hash of the action inputs (deterministic, hex, 64 chars)",
-            "pattern": "^[a-fA-F0-9]{64}$"
-          },
-          "risk_level": {
-            "type": "string",
-            "enum": ["low", "medium", "high", "critical"],
-            "description": "Risk assessment for this action"
-          },
-          "risk_summary": {
-            "type": "string",
-            "description": "Brief explanation of risk factors"
-          },
-          "decision": {
-            "type": "string",
-            "enum": ["approved", "rejected", "deferred"],
-            "description": "Agent's decision on whether to proceed"
-          },
-          "context": {
-            "type": "object",
-            "description": "Additional context (model version, environment, etc.)"
-          },
-          "timestamp": {
-            "type": "string",
-            "description": "ISO 8601 timestamp (auto-generated if omitted)"
-          }
-        }
-      }
-    }
-  ],
+  "tools": [{"name": "certify_file", "description": "Anchor a file hash on MultiversX as immutable proof. All-time volume pricing: $0.05–$0.01 per proof."}],
   "config": {
     "requiredEnv": [],
     "optionalEnv": ["XPROOF_API_KEY"],
@@ -166,7 +16,7 @@
       "x402": {
         "chain": "Base (eip155:8453)",
         "token": "USDC",
-        "cost_per_proof": "$0.05"
+        "pricing": "all-time volume: $0.05 (0–100k), $0.025 (100k–1M), $0.01 (1M+)"
       }
     }
   }
