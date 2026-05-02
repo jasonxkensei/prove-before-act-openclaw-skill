@@ -1,22 +1,32 @@
 {
   "name": "xproof",
-  "version": "3.0.0",
+  "version": "3.1.0",
   "description": "Proof and accountability layer for AI agents. Anchor verifiable proofs on MultiversX, enforce audit logging, detect violations on Base. All-time volume pricing: starts at $0.05.",
   "author": "jasonxkensei",
   "homepage": "https://xproof.app",
   "repository": "https://github.com/jasonxkensei/xproof-openclaw-skill",
-  "tools": [{"name": "certify_file", "description": "Anchor a file hash on MultiversX as immutable proof. All-time volume pricing: $0.05–$0.01 per proof."}],
+  "tools": [
+    {
+      "name": "certify_file",
+      "description": "Anchor a file hash on MultiversX as immutable proof. All-time volume pricing: $0.05\u2013$0.01 per proof."
+    }
+  ],
   "config": {
     "requiredEnv": [],
-    "optionalEnv": ["XPROOF_API_KEY"],
+    "optionalEnv": [
+      "XPROOF_API_KEY"
+    ],
     "baseUrl": "https://xproof.app",
     "auth": {
-      "methods": ["bearer", "x402"],
+      "methods": [
+        "bearer",
+        "x402"
+      ],
       "bearerPrefix": "pm_",
       "x402": {
         "chain": "Base (eip155:8453)",
         "token": "USDC",
-        "pricing": "all-time volume: $0.05 (0–100k), $0.025 (100k–1M), $0.01 (1M+)"
+        "pricing": "all-time volume: $0.05 (0\u2013100k), $0.025 (100k\u20131M), $0.01 (1M+)"
       }
     }
   }
