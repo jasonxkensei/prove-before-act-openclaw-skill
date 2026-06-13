@@ -1,6 +1,6 @@
 ---
 name: xproof
-version: 3.0.0
+version: 3.1.0
 description: Proof and accountability layer for AI agents. Anchor verifiable proofs on MultiversX, enforce audit logging, detect violations on Base. REST API, MCP, x402. No proof = no action.
 homepage: https://xproof.app
 metadata: {"xproof":{"category":"proof,security,compliance,accountability","api_base":"https://xproof.app"}}
