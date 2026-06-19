@@ -2,7 +2,7 @@
 
 > **No API key needed.** Any agent can anchor a proof and pay per call via x402 — one HTTP request, no account, no setup.
 
-The accountability layer for autonomous agents. Anchor reasoning (WHY) and action (WHAT) on-chain before execution. Immutable 4W audit trail on MultiversX.
+The accountability layer for autonomous agents. Anchor reasoning (WHY) + planned decision/intention (WHAT) on-chain before execution. Anchor actual result/output after for a full 4W audit trail on MultiversX.
 
 ## Install
 
@@ -34,7 +34,7 @@ def prove_before_act_x402(reasoning: dict, wallet_signer) -> dict:
         json.dumps(reasoning, sort_keys=True).encode()
     ).hexdigest()
 
-    # POST without auth → HTTP 402 ($0.05 USDC on Base)
+    # POST without auth → HTTP 402 ($0.01 USDC on Base)
     r = requests.post("https://xproof.app/api/proof",
         json={"file_hash": file_hash, "filename": "reasoning.json"})
     assert r.status_code == 402
@@ -88,24 +88,25 @@ from xproof import xproof_x402
 
 class xProofTool(Tool):
     name = "xproof_anchor"
-    description = "Anchor reasoning (WHY) and planned action (WHAT) BEFORE execution. No API key — pays via x402."
+    description = "Anchor reasoning (WHY) + planned decision (WHAT) before execution. Anchor result after for full 4W trail. No API key — pays via x402."
 
     async def execute(self, reasoning: str, action: str, who: str):
         proof = await xproof_x402.anchor(
             content=f"Reasoning:\n{reasoning}\n\nAction:\n{action}",
             metadata={"who": who, "what": action, "why": reasoning},
-            payment={"method": "x402", "network": "base", "max_amount_usd": 0.05}
+            payment={"method": "x402", "network": "base", "max_amount_usd": 0.01}
         )
         return {"proof_id": proof.id, "verify_url": proof.verify_url}
 ```
 
 ## Pricing
 
-| Volume | Price |
-|--------|-------|
-| 0 – 100k | $0.05 / proof |
-| 100k – 1M | $0.025 / proof |
-| 1M+ | $0.01 / proof |
+| Pricing | Amount |
+|---------|--------|
+| Per proof | $0.01 (flat) |
+| 100 proofs | $1 |
+| 1,000 proofs | $10 |
+| 10,000 proofs | $100 |
 
 **Free trial**: 10 proofs via `register_trial` MCP tool — no wallet, no card.
 
