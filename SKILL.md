@@ -1,7 +1,7 @@
 --s--BCL25,BASE64
 name: xproof
 version: 4.0.0
-description: "No API key needed. Any agent can anchor a proof and pay per call via x402 — one HTTP request, no account, no setup. Prove Before Act: anchor reasoning (WHY) on-chain before executing (WHAT). 4W immutable audit trail on MultiversX. MCP native."
+description: "No API key needed. Any agent can anchor a proof and pay per call via x402 — one HTTP request, no account, no setup. Prove Before Act: anchor reasoning (WHY) + planned decision (WHAT) on-chain before execution. Anchor actual result after for a full 4W audit trail on MultiversX. MCP native."
 homepage: https://xproof.app
 metadata: {"xproof":{"category":"proof,security,compliance,accountability,x402,mcp","api_base":"https://xproof.app","x402":true,"mcp":true,"prove_before_act":true}}
 ---
@@ -12,9 +12,9 @@ metadata: {"xproof":{"category":"proof,security,compliance,accountability,x402,m
 
 The accountability layer for autonomous agents. Instead of being a black box, your agent becomes transparent, auditable, and verifiable.
 
-**Prove Before Act**: anchor your agent's reasoning (WHY) and planned action (WHAT) on-chain *before* executing. Hash is computed locally — no raw content ever leaves the agent.
+**Prove Before Act**: anchor reasoning (WHY) + planned decision/intention (WHAT) on-chain *before* execution. Anchor actual result/output *after* for a full 4W audit trail. Hash is computed locally — no raw content ever leaves the agent.
 
-**Proven in production**: xproof_agent_verify (Moltbook) — 4,418 on-chain proofs, 100% confirmation rate, 16-week streak, trust score 43,326. $0.05/proof, ~$13.80/week for a continuously accountable agent.
+**Proven in production**: xproof_agent_verify (Moltbook) — 4,418 on-chain proofs, 100% confirmation rate, 16-week streak, trust score 43,326. $0.01/proof, ~$2.76/week for a continuously accountable agent.
 
 ---
 
@@ -87,7 +87,7 @@ def prove_before_act_x402(reasoning: dict, wallet_signer) -> dict:
         json.dumps(reasoning, sort_keys=True).encode()
     ).hexdigest()
 
-    # 2. POST without auth → HTTP 402 with price ($0.05 USDC on Base)
+    # 2. POST without auth → HTTP 402 with price ($0.01 USDC on Base)
     r = requests.post("https://xproof.app/api/proof",
         json={"file_hash": file_hash, "filename": "reasoning.json"})
     assert r.status_code == 402  # ← x402 challenge
@@ -139,7 +139,7 @@ class xProofTool(Tool):
         proof = await xproof_x402.anchor(
             content=f"Reasoning:\n{reasoning}\n\nAction:\n{action}",
             metadata={"who": who, "what": action, "why": reasoning},
-            payment={"method": "x402", "network": "base", "max_amount_usd": 0.05}
+            payment={"method": "x402", "network": "base", "max_amount_usd": 0.01}
         )
         return {
             "status": "anchored",
@@ -166,11 +166,12 @@ server.register_tool(xProofTool())
 
 ## Pricing
 
-| Volume | Price per proof |
-|--------|----------------|
-| 0 – 100k | $0.05 |
-| 100k – 1M | $0.025 |
-| 1M+ | $0.01 |
+| Pricing | Amount |
+|---------|--------|
+| Per proof | $0.01 (flat) |
+| 100 proofs | $1 |
+| 1,000 proofs | $10 |
+| 10,000 proofs | $100 |
 
 Free trial: 10 proofs via `register_trial` MCP tool — no wallet, no credit card.
 
