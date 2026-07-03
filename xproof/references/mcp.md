@@ -162,7 +162,7 @@ Use `md` format for LLM consumption -- produces human-readable Markdown with all
 
 List xProof capabilities, pricing, and usage guidance. No parameters required.
 
-**Returns:** Service description, pricing tiers ($0.05 / $0.025 / $0.01 per proof depending on all-time volume), list of tools, certification triggers, batch API details, free trial details, and supported protocols.
+**Returns:** Service description, flat pricing ($0.01 per proof, no tiers, no volume discounts), list of tools, certification triggers, batch API details, free trial details, and supported protocols.
 
 ---
 
@@ -233,10 +233,11 @@ When exposing xProof to an LLM, use:
 > "If you have no XPROOF_API_KEY in env, call `register_free_trial` first with your agent name. Store the returned `api_key`. You get 10 free proofs."
 
 > **Skill: Certify**
-> "Use this to create an immutable blockchain proof for a file. Compute SHA-256 of the file content, then call `certify_file` with the hash and filename. Cost: trial-free or $0.05."
+> "Use this to create an immutable blockchain proof for a file. Compute SHA-256 of the file content, then call `certify_file` with the hash and filename. Cost: trial-free or $0.01 (flat rate)."
 
 > **Skill: Audit before action**
 > "Before any high-risk action (trade, deploy, transfer), call `audit_agent_session` with the action details. If no `proof_id` is returned, BLOCK the action."
 
 > **Skill: Verify**
 > "Use this to check if a file has been certified. Pass the proof UUID to `verify_proof`. Returns blockchain transaction, timestamp, and verification status."
+
