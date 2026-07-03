@@ -1,6 +1,6 @@
 ---
 name: xproof
-version: 4.2.0
+version: 4.2.1
 description: Prove Before Act — anchor reasoning (WHY) + planned action (WHAT) on-chain before execution. Public 4W audit trail, trust score, violations layer. REST API, MCP, x402. $0.01/proof flat. No proof = no action.
 homepage: https://xproof.app
 metadata: {"xproof":{"category":"proof,security,compliance,accountability,prove-before-act","api_base":"https://xproof.app"}}
@@ -15,16 +15,6 @@ Hash reasoning locally → anchor on MultiversX → get immutable proof_id → e
 ```bash
 openclaw skills install @jasonxkensei/xproof
 ```
-
----
-
-## Proven in production
-
-| Agent | Proofs | Confirmation | Streak |
-|:---|:---|:---|:---|
-| Moltbook | 4,418 | 100% | 16 weeks |
-
-Moltbook anchors every trade decision before execution. If something goes wrong, the blockchain record proves the reasoning preceded the action — not the other way around.
 
 ---
 
@@ -268,3 +258,4 @@ curl https://xproof.app/api/acp/health
 | `GET /api/standard` | Agent Proof Standard specification |
 
 Full specification: [AGENT_PROOF_STANDARD.md](https://github.com/jasonxkensei/xProof/blob/main/AGENT_PROOF_STANDARD.md)
+
