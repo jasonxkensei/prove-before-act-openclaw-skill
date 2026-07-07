@@ -1,6 +1,6 @@
 --s--BCL25,BASE64
 name: xproof
-version: 4.0.0
+version: 4.1.0
 description: "No API key needed. Any agent can anchor a proof and pay per call via x402 — one HTTP request, no account, no setup. Prove Before Act: anchor reasoning (WHY) + planned decision (WHAT) on-chain before execution. Anchor actual result after for a full 4W audit trail on MultiversX. MCP native."
 homepage: https://xproof.app
 metadata: {"xproof":{"category":"proof,security,compliance,accountability,x402,mcp","api_base":"https://xproof.app","x402":true,"mcp":true,"prove_before_act":true}}
@@ -15,6 +15,111 @@ The accountability layer for autonomous agents. Instead of being a black box, yo
 **Prove Before Act**: anchor reasoning (WHY) + planned decision/intention (WHAT) on-chain *before* execution. Anchor actual result/output *after* for a full 4W audit trail. Hash is computed locally — no raw content ever leaves the agent.
 
 **Proven in production**: xproof_agent_verify (Moltbook) — 4,418 on-chain proofs, 100% confirmation rate, 16-week streak, trust score 43,326. $0.01/proof, ~$2.76/week for a continuously accountable agent.
+
+---
+
+## Quick Start — 30 seconds to your first proof
+
+```bash
+# 1. Get 10 free proofs — no wallet, no card
+curl -X POST https://xproof.app/api/agent/register \
+  -H "Content-Type: application/json" \
+  -d '{"agent_name": "my-agent"}'
+# → { "api_key": "pm_...", "trial": { "quota": 10, "remaining": 10 } }
+
+# 2. Hash your reasoning locally — nothing leaves your machine
+python3 -c "import hashlib,json; d={'why':'RSI=38, below threshold','what':'BUY BTC 0.5'}; print(hashlib.sha256(json.dumps(d,sort_keys=True).encode()).hexdigest())"
+# → a1b2c3...64hex
+
+# 3. Anchor proof BEFORE executing the action (Prove Before Act)
+curl -X POST https://xproof.app/api/proof \
+  -H "Authorization: Bearer pm_YOUR_KEY" \
+  -H "Content-Type: application/json" \
+  -d '{"file_hash":"a1b2c3...64hex","filename":"reasoning.json","metadata":{"who":"my-agent","what":"BUY BTC 0.5","why":"RSI=38"}}'
+# → { "proof_id": "...", "verify_url": "/proof/...", "status": "pending" }
+# → Execute your action ONLY after receiving proof_id
+```
+
+---
+
+## Use-case examples — copy-paste ready
+
+### Trading agent — Finance · High-value decisions
+
+Prove a BUY/SELL decision before executing — full 4W audit trail anchored on-chain.
+
+```python
+import hashlib, json, requests
+
+# 1. Document your reasoning
+reasoning = {
+    "who": "trading-agent-v2", "what": "BUY BTC 0.5",
+    "why": "RSI=38 (below 40 threshold); allocation=2.1% (below 3% cap)",
+    "model": "gpt-4o-mini", "session_id": "sess_001"
+}
+h = hashlib.sha256(json.dumps(reasoning, sort_keys=True).encode()).hexdigest()
+
+# 2. Anchor BEFORE executing — Prove Before Act
+resp = requests.post("https://xproof.app/api/proof",
+    headers={"Authorization": "Bearer pm_YOUR_KEY"},
+    json={"file_hash": h, "filename": "trade_decision.json", "metadata": reasoning})
+proof_id = resp.json()["proof_id"]  # returned in ~1.1s, on-chain in ~6s
+
+# 3. Execute only after proof is anchored
+execute_trade("BUY", "BTC", 0.5)
+print(f"Audit trail: https://xproof.app/proof/{proof_id}")
+```
+
+### Research agent — Content · Reports · Analysis
+
+Anchor reasoning + sources before publishing — verifiable provenance for readers.
+
+```python
+import hashlib, json, requests
+
+# 1. Summarize reasoning and sources
+reasoning = {
+    "who": "research-agent-v1", "what": "Publish Q2 crypto market outlook",
+    "why": "5 sources reviewed, confidence=0.87, no contradictions detected",
+    "sources": ["arxiv:2406.12345", "bloomberg:BTC-Q2", "coindesk:2026-07-01"]
+}
+h = hashlib.sha256(json.dumps(reasoning, sort_keys=True).encode()).hexdigest()
+
+# 2. Anchor hash — report content never leaves the agent
+resp = requests.post("https://xproof.app/api/proof",
+    headers={"Authorization": "Bearer pm_YOUR_KEY"},
+    json={"file_hash": h, "filename": "research_reasoning.json", "metadata": reasoning})
+proof_id = resp.json()["proof_id"]
+
+# 3. Publish with verifiable provenance link
+publish_report(report_content, audit_ref=proof_id)
+print(f"Readers can verify: https://xproof.app/proof/{proof_id}")
+```
+
+### Support agent — Customer service · Compliance
+
+Certify decision before sending response — dispute-proof audit record.
+
+```python
+import hashlib, json, requests
+
+# 1. Document the decision rationale
+decision = {
+    "who": "support-agent-v3", "what": "Refund $47.50 approved",
+    "why": "Policy §3.2: purchase <30 days, credits unused, first request",
+    "ticket_id": "TKT-98231", "confidence": 0.95
+}
+h = hashlib.sha256(json.dumps(decision, sort_keys=True).encode()).hexdigest()
+
+# 2. Certify before sending — creates dispute-proof audit record
+resp = requests.post("https://xproof.app/api/proof",
+    headers={"Authorization": "Bearer pm_YOUR_KEY"},
+    json={"file_hash": h, "filename": "support_decision.json", "metadata": decision})
+proof_id = resp.json()["proof_id"]
+
+# 3. Send response with proof_id as audit reference
+send_to_customer(ticket_id, response_text, audit_ref=proof_id)
+```
 
 ---
 
@@ -151,16 +256,6 @@ class xProofTool(Tool):
 server = MCPServer("xproof-accountability")
 server.register_tool(xProofTool())
 ```
-
----
-
-## Use cases
-
-- Trading & finance agents (prove risk assessment before execution)
-- Research agents (certify findings before publishing)
-- Content agents (prove AI-generation metadata before publication — see Moltbook)
-- Enterprise agents (compliance gate before any high-stakes action)
-- Any agent that takes decisions with legal, financial, or reputational impact
 
 ---
 
