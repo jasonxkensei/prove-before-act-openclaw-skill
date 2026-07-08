@@ -1,6 +1,6 @@
---s--BCL25,BASE64
+---
 name: xproof
-version: 4.1.0
+version: 4.2.0
 description: "No API key needed. Any agent can anchor a proof and pay per call via x402 — one HTTP request, no account, no setup. Prove Before Act: anchor reasoning (WHY) + planned decision (WHAT) on-chain before execution. Anchor actual result after for a full 4W audit trail on MultiversX. MCP native."
 homepage: https://xproof.app
 metadata: {"xproof":{"category":"proof,security,compliance,accountability,x402,mcp","api_base":"https://xproof.app","x402":true,"mcp":true,"prove_before_act":true}}
@@ -18,31 +18,68 @@ The accountability layer for autonomous agents. Instead of being a black box, yo
 
 ---
 
-## Quick Start — 30 seconds to your first proof
+## Quick Start — 3 steps
 
 ```bash
-# 1. Get 10 free proofs — no wallet, no card
-curl -X POST https://xproof.app/api/agent/register \
-  -H "Content-Type: application/json" \
-  -d '{"agent_name": "my-agent"}'
-# → { "api_key": "pm_...", "trial": { "quota": 10, "remaining": 10 } }
+# 1. Get API key — no wallet, no card (10 free proofs)
+curl -X POST https://xproof.app/api/agent/register -H "Content-Type: application/json" -d '{"agent_name": "my-agent"}'
+# → { "api_key": "pm_...", "trial": { "quota": 10 } }
 
-# 2. Hash your reasoning locally — nothing leaves your machine
-python3 -c "import hashlib,json; d={'why':'RSI=38, below threshold','what':'BUY BTC 0.5'}; print(hashlib.sha256(json.dumps(d,sort_keys=True).encode()).hexdigest())"
-# → a1b2c3...64hex
+# 2. Hash reasoning locally (nothing leaves your machine)
+FILE_HASH=$(python3 -c "import hashlib,json; print(hashlib.sha256(json.dumps({'why':'RSI=38','what':'BUY BTC'},sort_keys=True).encode()).hexdigest())")
 
-# 3. Anchor proof BEFORE executing the action (Prove Before Act)
-curl -X POST https://xproof.app/api/proof \
-  -H "Authorization: Bearer pm_YOUR_KEY" \
+# 3. Anchor BEFORE executing — Prove Before Act
+curl -X POST https://xproof.app/api/proof -H "Authorization: Bearer pm_YOUR_KEY" \
   -H "Content-Type: application/json" \
-  -d '{"file_hash":"a1b2c3...64hex","filename":"reasoning.json","metadata":{"who":"my-agent","what":"BUY BTC 0.5","why":"RSI=38"}}'
-# → { "proof_id": "...", "verify_url": "/proof/...", "status": "pending" }
-# → Execute your action ONLY after receiving proof_id
+  -d "{\"file_hash\":\"$FILE_HASH\",\"filename\":\"reasoning.json\",\"metadata\":{\"who\":\"my-agent\",\"what\":\"BUY BTC\",\"why\":\"RSI=38\"}}"
+# → { "proof_id": "prf_...", "verify_url": "/proof/...", "status": "pending" }
+```
+
+---
+
+## Going to production? — 4 required patterns
+
+- **Batch anchoring** — POST /api/batch, up to 100 files per call, 50× fewer requests than one-by-one
+- **Retry policy** — exponential backoff (1s→2s→4s), handle 409 dedup, respect Retry-After on 429
+- **Monitoring** — alert if daily proof volume drops below expected minimum
+- **No proof = no action** — for high-stakes agents (trading, legal, medical): block action if anchoring fails after 3 retries
+
+```bash
+# Batch anchoring — 1 call instead of N
+curl -X POST https://xproof.app/api/batch -H "Authorization: Bearer pm_YOUR_KEY" \
+  -H "Content-Type: application/json" \
+  -d '{"certifications":[{"file_hash":"hash1","filename":"action1.json"},{"file_hash":"hash2","filename":"action2.json"}]}'
+# → {"results":[{"proof_id":"prf_...","status":"pending"},{"proof_id":"prf_...","status":"pending"}]}
+```
+
+```python
+def anchor_with_retry(file_hash: str, filename: str, api_key: str, max_retries=3):
+    """Production-grade anchor — retry + no proof = no action gate."""
+    import time, requests
+    backoff = [1, 2, 4]
+    for attempt in range(max_retries):
+        try:
+            resp = requests.post("https://xproof.app/api/proof",
+                headers={"Authorization": f"Bearer {api_key}"},
+                json={"file_hash": file_hash, "filename": filename}, timeout=10)
+            if resp.status_code == 200: return resp.json()["proof_id"]
+            if resp.status_code == 409: return resp.json()["existing_proof_id"]
+            if resp.status_code == 429: time.sleep(int(resp.headers.get("Retry-After", 5))); continue
+            if resp.status_code >= 500: time.sleep(backoff[attempt]); continue
+        except requests.Timeout:
+            time.sleep(backoff[attempt])
+    raise PolicyError("Proof anchoring failed — action blocked (no proof = no action)")
 ```
 
 ---
 
 ## Use-case examples — copy-paste ready
+
+| Use case | Domain | What gets anchored |
+|----------|--------|--------------------|
+| **Trading agent** | Finance · High-value decisions | BUY/SELL reasoning before order execution |
+| **Research agent** | Content · Reports · Analysis | Reasoning + sources before publishing |
+| **Support agent** | Customer service · Compliance | Decision rationale before sending response |
 
 ### Trading agent — Finance · High-value decisions
 
@@ -176,59 +213,44 @@ async def prove_before_act(task):
 
     # Only execute after proof is confirmed
     result = await agent.execute(task, proof_id=proof.id)
-    print(f"Proof: https://xproof.app{proof.verify_url}")
-    return result
+    return {"result": result, "proof": proof.verify_url}
 ```
 
-### 2. Via x402 (no API key — fully autonomous)
+### 2. x402 — no API key, fully autonomous
 
 ```python
 import hashlib, json, base64, requests
 
-def prove_before_act_x402(reasoning: dict, wallet_signer) -> dict:
-    """No API key, no account — pure machine-to-machine."""
-    # 1. Hash locally
-    file_hash = hashlib.sha256(
-        json.dumps(reasoning, sort_keys=True).encode()
-    ).hexdigest()
+def anchor_x402(reasoning: dict, filename: str, wallet_signer) -> dict:
+    content = json.dumps(reasoning, sort_keys=True).encode()
+    file_hash = hashlib.sha256(content).hexdigest()
+    payload = {"file_hash": file_hash, "filename": filename}
 
-    # 2. POST without auth → HTTP 402 with price ($0.01 USDC on Base)
-    r = requests.post("https://xproof.app/api/proof",
-        json={"file_hash": file_hash, "filename": "reasoning.json"})
-    assert r.status_code == 402  # ← x402 challenge
-
-    # 3. Sign USDC on Base (eip155:8453)
-    signed = wallet_signer.sign_x402(r.json()["payment"])
+    r = requests.post("https://xproof.app/api/proof", json=payload)
+    assert r.status_code == 402
+    payment_info = r.json()["payment"]
+    signed = wallet_signer.sign_x402(payment_info)
     x_payment = base64.b64encode(json.dumps(signed).encode()).decode()
 
-    # 4. Resend with X-PAYMENT → proof_id returned immediately
     proof = requests.post("https://xproof.app/api/proof",
-        headers={"X-PAYMENT": x_payment},
-        json={"file_hash": file_hash, "filename": "reasoning.json"})
-
-    return proof.json()  # { proof_id, verify_url }
+        headers={"X-PAYMENT": x_payment}, json=payload)
+    return proof.json()
 ```
 
-### 3. Via MCP tool call
+### 3. MCP (Claude / Cursor / any MCP client)
 
 ```json
-// Call certify_file before any significant action
 {
-  "name": "certify_file",
-  "arguments": {
-    "file_hash": "sha256_of_reasoning",
-    "filename": "decision_reasoning.json",
-    "metadata": {
-      "who": "my-agent-v2",
-      "what": "execute trade BUY BTC 0.5",
-      "why": "RSI=38, below oversold threshold, risk/reward 1:3",
-      "purpose": "prove_before_act"
+  "mcpServers": {
+    "xproof": {
+      "url": "https://xproof.app/mcp",
+      "headers": { "Authorization": "Bearer pm_YOUR_KEY" }
     }
   }
 }
-// Returns: { proof_id, verify_url, status: "anchored" }
-// → Now execute the action with proof_id attached
 ```
+
+Available tools: `certify_file`, `audit_agent_session`, `verify_proof`, `investigate_proof`, `register_trial`
 
 ### 4. Full MCP server integration
 
