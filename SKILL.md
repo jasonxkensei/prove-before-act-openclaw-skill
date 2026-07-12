@@ -1,6 +1,6 @@
 ---
 name: xproof
-version: 4.2.0
+version: 4.3.0
 description: "No API key needed. Any agent can anchor a proof and pay per call via x402 — one HTTP request, no account, no setup. Prove Before Act: anchor reasoning (WHY) + planned decision (WHAT) on-chain before execution. Anchor actual result after for a full 4W audit trail on MultiversX. MCP native."
 homepage: https://xproof.app
 metadata: {"xproof":{"category":"proof,security,compliance,accountability,x402,mcp","api_base":"https://xproof.app","x402":true,"mcp":true,"prove_before_act":true}}
