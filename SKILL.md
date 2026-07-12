@@ -21,14 +21,20 @@ The accountability layer for autonomous agents. Instead of being a black box, yo
 ## Quick Start — 3 steps
 
 ```bash
-# 1. Get API key — no wallet, no card (10 free proofs)
+# Step 0 — Get API key (10 free proofs, no wallet, no card)
+
+# Option A: MCP register_trial (fastest — no Authorization header needed)
+{"name": "register_trial", "arguments": {"agent_name": "my-agent"}}
+# → { "api_key": "pm_...", "trial_remaining": 10 }
+
+# Option B: REST (one curl)
 curl -X POST https://xproof.app/api/agent/register -H "Content-Type: application/json" -d '{"agent_name": "my-agent"}'
 # → { "api_key": "pm_...", "trial": { "quota": 10 } }
 
-# 2. Hash reasoning locally (nothing leaves your machine)
+# Step 1 — Hash reasoning locally (nothing leaves your machine)
 FILE_HASH=$(python3 -c "import hashlib,json; print(hashlib.sha256(json.dumps({'why':'RSI=38','what':'BUY BTC'},sort_keys=True).encode()).hexdigest())")
 
-# 3. Anchor BEFORE executing — Prove Before Act
+# Step 2 — Anchor BEFORE executing — Prove Before Act
 curl -X POST https://xproof.app/api/proof -H "Authorization: Bearer pm_YOUR_KEY" \
   -H "Content-Type: application/json" \
   -d "{\"file_hash\":\"$FILE_HASH\",\"filename\":\"reasoning.json\",\"metadata\":{\"who\":\"my-agent\",\"what\":\"BUY BTC\",\"why\":\"RSI=38\"}}"
