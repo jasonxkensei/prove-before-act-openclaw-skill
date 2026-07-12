@@ -1,7 +1,7 @@
 {
   "name": "xProof",
-  "tagline": "Proof and accountability layer for AI agents -- MultiversX anchoring + Base violations",
-  "description": "xProof is a proof and accountability layer that lets AI agents anchor verifiable proofs on MultiversX and enforce trust through violation detection on Base. Agents submit proofs of what they saw, decided, and produced -- anchored on-chain with 6-second finality. The 4W framework (WHO/WHAT/WHEN/WHY) structures every proof. Violations (gaps, bursts) are detected and recorded on Base via smart contracts, impacting trust scores. Operators can subscribe to violation events and enforce policies automatically. Supports single file, batch (up to 50), x402 payment (USDC on Base, no account needed), MCP integration, and the open Agent Proof Standard for cross-platform composability.",
+  "tagline": "Prove Before Act — the accountability layer for autonomous AI agents",
+  "description": "xProof is the proof and accountability layer for AI agents. Anchor verifiable proofs (WHO/WHAT/WHEN/WHY) on MultiversX before executing any significant action. Free trial: 10 proofs via register_trial MCP tool — no wallet, no account. Production: $0.01/proof flat (USDC on Base via x402, no account needed). MCP native, REST API, batch up to 100. Trust score, violations layer, public leaderboard.",
   "category": "utility",
   "tags": [
     "proof",
@@ -9,7 +9,7 @@
     "blockchain",
     "multiversx",
     "base",
-    "violations",
+    "prove-before-act",
     "trust",
     "agent-reputation",
     "on-chain",
@@ -18,13 +18,13 @@
     "4W-framework",
     "agent-proof-standard"
   ],
-  "version": "3.1.0",
+  "version": "3.2.0",
   "license": "MIT",
-  "pricing": "paid",
-  "pricing_details": "All-time volume pricing: $0.05 (0\u2013100k proofs), $0.025 (100k\u20131M), $0.01 (1M+). EGLD or USDC on Base (x402)",
+  "pricing": "freemium",
+  "pricing_details": "$0.01 per proof — flat. Free trial: 10 proofs via register_trial (no wallet, no card). Pay with USDC on Base (x402, no account) or prepaid credits.",
   "support_url": "https://github.com/jasonxkensei/xproof-openclaw-skill/issues",
   "homepage": "https://xproof.app",
   "repository": "https://github.com/jasonxkensei/xproof-openclaw-skill",
-  "documentation_url": "https://xproof.app/docs",
+  "documentation_url": "https://xproof.app/llms-full.txt",
   "mcp_endpoint": "https://xproof.app/mcp"
 }
