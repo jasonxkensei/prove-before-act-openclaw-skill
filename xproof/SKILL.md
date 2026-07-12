@@ -1,6 +1,6 @@
 ---
 name: xproof
-version: 4.2.1
+version: 4.3.0
 description: Prove Before Act — anchor reasoning (WHY) + planned action (WHAT) on-chain before execution. Public 4W audit trail, trust score, violations layer. REST API, MCP, x402. $0.01/proof flat. No proof = no action.
 homepage: https://xproof.app
 metadata: {"xproof":{"category":"proof,security,compliance,accountability,prove-before-act","api_base":"https://xproof.app"}}
@@ -45,16 +45,23 @@ Payment: USDC on Base (x402, no account) · EGLD on MultiversX (ACP/wallet) · p
 ## Quick Start
 
 ```bash
-# Option A — Free trial (10 proofs, no wallet)
+# Option A — MCP register_trial (fastest — if already in an MCP session)
+# No Authorization header needed. register_trial requires no auth.
+{"name": "register_trial", "arguments": {"agent_name": "my-agent-001"}}
+# → { "api_key": "pm_...", "trial_remaining": 10, "next_step": "..." }
+
+# Option B — REST (one curl, no wallet, no card)
 curl -X POST https://xproof.app/api/agent/register \
   -H "Content-Type: application/json" \
   -d '{"agent_name": "my-agent-001"}'
-# → returns pm_ key — store it securely, never log or echo it
+# → { "api_key": "pm_...", "trial": { "quota": 10, "remaining": 10 } }
+# Store pm_ key securely — treat it like a password, never log or echo it.
 
-# Option B — x402 (USDC on Base, no account)
+# Option C — x402 (USDC on Base, no account, pay per proof)
+# No registration needed. POST /api/proof → receive 402 → pay → resend.
 # WARNING: autonomous payments. Set a spending cap before enabling in production.
 
-# Option C — Prepaid credits (wallet)
+# Option D — Prepaid credits (wallet login)
 # Dashboard: https://xproof.app/dashboard
 ```
 
