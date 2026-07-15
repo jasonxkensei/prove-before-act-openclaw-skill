@@ -18,7 +18,7 @@
     "4W-framework",
     "agent-proof-standard"
   ],
-  "version": "3.3.3",
+  "version": "3.3.4",
   "license": "MIT",
   "pricing": "freemium",
   "pricing_details": "$0.01 per proof — flat. Free trial: 10 proofs via register_trial (no wallet, no card). Pay with USDC on Base (x402, no account) or prepaid credits.",
