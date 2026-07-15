@@ -16,6 +16,8 @@ Alternative: x402 payment protocol (no API key needed). Send request without aut
 
 Certify a single file.
 
+> **Irreversible action:** Each successful call creates a permanent, public blockchain record. The file_hash, filename, and author metadata become publicly accessible and cannot be deleted. Only certify content you are comfortable making permanently public.
+
 **Request:**
 ```json
 {
@@ -41,6 +43,8 @@ Certify a single file.
 ### POST /api/batch
 
 Certify up to 50 files in one call.
+
+> **Cost note:** Each file in the batch consumes one credit ($0.01). A 50-file batch call costs $0.50.
 
 **Request:**
 ```json
@@ -78,4 +82,9 @@ Available tools: `certify_file`, `verify_proof`, `get_proof`, `discover_services
 
 ## Pricing
 
-$0.05 per certification.
+$0.01 per proof (flat). Free trial: 10 proofs via `register_trial` MCP tool — no wallet, no card required.
+
+| Endpoint | Price |
+|:---|:---|
+| `POST /api/proof` | $0.01 per proof |
+| `POST /api/batch` | $0.01 per file |
