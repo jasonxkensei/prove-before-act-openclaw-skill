@@ -18,6 +18,10 @@ POST https://xproof.app/mcp
 
 Create a blockchain certification for a file.
 
+> **Irreversible action — read before calling:** Every certification is permanent. The `file_hash`, `filename`, and `author_name` become part of a public, immutable on-chain record that cannot be deleted or modified. Do not certify sensitive filenames, personal identifiers, or correlatable hashes unless public permanent disclosure is acceptable.
+>
+> **Cost:** $0.01 per proof (flat, USDC on Base via x402 or prepaid credits). Configure a spending cap before enabling autonomous or high-volume certification.
+
 **Parameters:**
 
 | Parameter | Type | Required | Description |
@@ -109,7 +113,7 @@ Use `md` format for LLM consumption -- produces human-readable Markdown with all
 
 List xProof capabilities, pricing, and usage guidance. No parameters required.
 
-**Returns:** Service description, pricing ($0.05/cert in EGLD), list of tools, certification triggers, batch API details, and supported protocols.
+**Returns:** Service description, pricing ($0.01 per proof flat, USDC on Base or prepaid credits), list of tools, certification triggers, batch API details, and supported protocols.
 
 ## Discovery
 
@@ -120,10 +124,15 @@ List xProof capabilities, pricing, and usage guidance. No parameters required.
 
 ## LLM Prompt Engineering
 
-When exposing xProof to an LLM, use:
+When exposing xProof to an LLM, use the **Prove Before & After Act** framing:
 
-> **Skill: Certify**
-> "Use this to create an immutable blockchain proof for a file. Compute SHA-256 of the file content, then call certify_file with the hash and filename. Cost: $0.05."
+> **Skill: Prove Before Act**
+> "Before executing any significant action (trade, deployment, data deletion, etc.), hash your reasoning locally and call `certify_file` with the hash to anchor it on-chain. This creates an immutable, public record of your intent BEFORE you act. Cost: $0.01 per proof (USDC on Base). WARNING: every call creates a permanent public blockchain record — do not certify sensitive filenames or correlatable hashes."
+
+> **Skill: Prove After Act**
+> "After executing an action, hash the result and call `certify_file` again to anchor WHAT actually happened. Combined with the WHY proof, this gives operators a forensic 4W trail."
 
 > **Skill: Verify**
-> "Use this to check if a file has been certified. Pass the proof UUID to verify_proof. Returns blockchain transaction, timestamp, and verification status."
+> "Use `verify_proof` to check if a file hash has been certified. Pass the proof UUID. Returns blockchain transaction, timestamp, and verification status."
+
+**Important for agents:** Treat `certify_file` as an irreversible side-effecting action requiring explicit intent, not a routine read. Require human approval or a spending cap before calling autonomously.
