@@ -1,6 +1,6 @@
 ---
 name: xproof
-version: 3.3.6
+version: 3.3.7
 description: "Certify what your agent decided (WHY) before acting, and what it produced (WHAT) after. 4W audit trail on MultiversX, violations layer on Base, trust score."
 skill_visibility: public
 homepage: https://xproof.app
@@ -56,16 +56,16 @@ Payment: USDC on Base (x402, no account) or EGLD on MultiversX (ACP/wallet) or p
 The canonical source for all skill files is the **main xProof repository** (`jasonxkensei/xProof`), which is the repository audited by security tools. Install from there directly:
 
 ```bash
-mkdir -p .agent/skills/xproof/references
+mkdir -p <SKILL_DIR>/xproof/references
 
 # Core Skill — from the canonical main repository
 curl -sL https://raw.githubusercontent.com/jasonxkensei/xProof/main/clawhub-publish/xproof/SKILL.md \
-  > .agent/skills/xproof/SKILL.md
+  > <SKILL_DIR>/xproof/SKILL.md
 
 # Reference Manuals
 for f in certification x402 mcp; do
   curl -sL "https://raw.githubusercontent.com/jasonxkensei/xProof/main/clawhub-publish/xproof/references/${f}.md" \
-    > ".agent/skills/xproof/references/${f}.md"
+    > "<SKILL_DIR>/xproof/references/${f}.md"
 done
 ```
 
@@ -89,7 +89,7 @@ done
 
 **Data retention:** proof records are permanent and public by default (that is the point — immutable evidence). Before certifying, confirm you want the hash publicly anchored on MultiversX mainnet forever.
 
-**Skill file:** this file (`.agent/skills/xproof/SKILL.md`) is intentionally public and contains no secrets. It is documentation only — API patterns, pricing, and integration examples. Safe to audit, share, or version-control.
+**Skill file:** this file (`<SKILL_DIR>/xproof/SKILL.md`) is intentionally public and contains no secrets. It is documentation only — API patterns, pricing, and integration examples. Safe to audit, share, or version-control.
 
 ## Security
 
@@ -187,7 +187,7 @@ No raw file content, no API keys, no account information, and no metadata beyond
 
 ```bash
 # Example proof request with webhook
-curl -X POST https://xproof.app/api/proof \
+curl -X POST ${XPROOF_BASE_URL}/api/proof \
   -H "Authorization: Bearer pm_..." \
   -H "Content-Type: application/json" \
   -d '{
@@ -252,21 +252,21 @@ sha256sum myfile.pdf | awk '{print $1}'
 # Then POST the hash to /api/proof
 
 # Anchor via MCP
-curl -X POST https://xproof.app/mcp \
+curl -X POST ${XPROOF_BASE_URL}/mcp \
   -H "Authorization: Bearer pm_..." \
   -d '{"jsonrpc":"2.0","id":1,"method":"tools/call","params":{"name":"certify_file","arguments":{"file_hash":"...","filename":"myfile.pdf"}}}'
 
 # Verify a proof
-curl https://xproof.app/api/proof/<proof_id>
+curl ${XPROOF_BASE_URL}/api/proof/<proof_id>
 
 # Get badge (embed in README)
 ![xProof](https://xproof.app/badge/<proof_id>)
 
 # Batch anchor
-curl -X POST https://xproof.app/api/batch \
+curl -X POST ${XPROOF_BASE_URL}/api/batch \
   -H "Authorization: Bearer pm_..." \
   -d '{"files":[{"file_hash":"...","filename":"a.txt"},{"file_hash":"...","filename":"b.txt"}]}'
 
 # Health check
-curl https://xproof.app/api/acp/health
+curl ${XPROOF_BASE_URL}/api/acp/health
 ```
