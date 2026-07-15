@@ -1,7 +1,8 @@
 ---
 name: xproof
-version: 3.3.5
-description: Prove Before & After Act — WHO from MX-8004 identity, WHAT/WHEN/WHY from xProof. Full 4W audit trail, trust score, violations layer. REST API, MCP, x402. $0.01/proof flat. No proof = no critical action.
+version: 3.3.6
+description: "Certify what your agent decided (WHY) before acting, and what it produced (WHAT) after. 4W audit trail on MultiversX, violations layer on Base, trust score."
+skill_visibility: public
 homepage: https://xproof.app
 metadata: {"xproof":{"category":"proof,security,compliance,accountability,prove-before-act","api_base":"https://xproof.app"}}
 ---
@@ -69,6 +70,26 @@ done
 ```
 
 > **Source verification:** All files above are served from `github.com/jasonxkensei/xProof` — the same repository that contains the server code, contracts, and SDKs. You can audit the full source at that URL before installing.
+
+## Data & Privacy
+## Data & Privacy
+
+> **Transparency notice — what leaves your environment when using this skill.**
+
+| Data field | Sent to xproof.app? | Notes |
+|:---|:---:|:---|
+| File content / raw text | **Never** | Hash locally; only the digest crosses the boundary |
+| `file_hash` (SHA-256 hex, 64 chars) | Yes | One-way fingerprint; original content cannot be reconstructed |
+| `filename` / `author` | Optional | Metadata you explicitly supply; omit if sensitive |
+| `action_description` / `context` | Optional | Only when you call `/api/audit` or `audit_agent_session` |
+| USDC payment (x402) | Yes — Base chain | On-chain transaction; amount is your configured ceiling |
+| API key (`pm_...`) | Yes — HTTP header | Treat like a password; never log or commit |
+
+**What xproof.app does NOT receive:** raw file contents, prompt text, model weights, environment variables, or any field you do not explicitly pass.
+
+**Data retention:** proof records are permanent and public by default (that is the point — immutable evidence). Before certifying, confirm you want the hash publicly anchored on MultiversX mainnet forever.
+
+**Skill file:** this file (`.agent/skills/xproof/SKILL.md`) is intentionally public and contains no secrets. It is documentation only — API patterns, pricing, and integration examples. Safe to audit, share, or version-control.
 
 ## Security
 
