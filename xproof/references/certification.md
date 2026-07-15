@@ -2,6 +2,12 @@
 
 REST endpoints for creating and verifying blockchain certifications on MultiversX.
 
+> **Before using certification endpoints — read this:**
+> - **Immutable and public:** Every successful certification creates a permanent, publicly accessible record on the MultiversX blockchain. Records cannot be deleted, modified, or made private after creation.
+> - **What becomes public:** The `file_hash`, `filename`, and `author_name` you submit. Do not submit sensitive filenames, personal identifiers, or hashes that could be correlated back to private content.
+> - **Cost:** $0.01 per proof (flat). x402 mode charges USDC on Base per request — configure a spending cap before enabling autonomous certification.
+> - **Irreversibility applies to your agent too:** If your agent calls this API autonomously, it can create paid, permanent public records without per-call user confirmation. Require human approval or configure a spend threshold.
+
 ## Endpoints
 
 ### `POST /api/proof` -- Certify a Single File
