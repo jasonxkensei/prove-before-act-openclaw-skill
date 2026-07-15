@@ -1,22 +1,22 @@
 ---
 name: xproof
-version: 3.3.1
+version: 3.3.2
 description: Prove Before & After Act — WHO from MX-8004 identity, WHAT/WHEN/WHY from xProof. Full 4W audit trail, trust score, violations layer. REST API, MCP, x402. $0.01/proof flat. No proof = no critical action.
 homepage: https://xproof.app
 metadata: {"xproof":{"category":"proof,security,compliance,accountability,prove-before-act","api_base":"https://xproof.app"}}
 ---
 
-# xProof -- Prove Before & After Act — Accountability Layer for AI Agents
+# xProof — Prove Before & After Act
 
-This skill enables your agent to **anchor reasoning (WHY) on-chain before executing any significant action and the actual result (WHAT) after** — creating a complete Prove Before & After Act cycle. Enforce pre-execution audit logging and detect violations via Base, producing tamper-proof, publicly verifiable records of who decided what, when, and why.
+Anchor reasoning (WHY) before execution and actual result (WHAT) after — creating a complete, tamper-proof 4W audit trail on MultiversX (Who via MX-8004, What/When/Why via xProof). Trust score, violations layer, public verification.
 
-## The Core Pattern: Prove Before & After Act
+## The Core Pattern
 
 ```
 1. Reason (WHY) → 2. Hash locally → 3. Anchor WHY on-chain → 4. Get proof_id → 5. Execute → 6. Hash result (WHAT) → 7. Anchor WHAT on-chain → 8. Full 4W trail
 ```
 
-Anchor reasoning (WHY) on-chain **before** execution. Anchor the actual result/output (WHAT) **after** for a complete 4W audit trail. The proof_id is your immutable pre-execution commitment — if something goes wrong, you have forensic evidence that the reasoning preceded the action.
+The `proof_id` from step 4 is your immutable pre-execution commitment — if something goes wrong, you have forensic evidence that the reasoning preceded the action.
 
 **4W breakdown — what each letter means and who provides it:**
 
@@ -31,7 +31,7 @@ xProof owns WHAT / WHEN / WHY and the causal link that proves reasoning preceded
 
 > **Agent reference:** [`https://xproof.app/agent-context`](https://xproof.app/agent-context) — 13 Q&A sections written specifically for autonomous agents: production deployment patterns, retry policy, x402 payment walkthrough, 4W audit trail deep-dive, privacy model, fleet monitoring, latency benchmarks, and framework integration examples (LangChain, CrewAI, AutoGen, LlamaIndex, OpenAI Agents SDK, Fetch.ai).
 
-**Why Prove Before Act?** An agent that can prove its reasoning before acting is fundamentally more trustworthy than one that cannot. It creates an unbreakable causal chain: the intent existed before the action, and the blockchain makes that sequence immutable.
+**Why anchor before acting?** An agent that proves its reasoning before executing is fundamentally more trustworthy than one that cannot. It creates an unbreakable causal chain: the intent existed before the action, and the blockchain makes that sequence immutable.
 
 **Why audit?** Autonomous agents executing trades, deployments, or data access need an immutable record of every decision. The Agent Audit Log Standard enforces this: no proof = no execution.
 
