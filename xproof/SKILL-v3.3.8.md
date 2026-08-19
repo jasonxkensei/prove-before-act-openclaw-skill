@@ -37,7 +37,7 @@ Prove Before Act records WHAT / WHEN / WHY context. MX-8004 may provide WHO when
 
 **Why audit?** Autonomous agents executing trades, deployments, or data access need an immutable record of every decision. The Agent Audit Log Standard describes a blocking pattern your agent can adopt: obtain a proof before executing. Enforcement is implemented in your agent code; Prove Before Act supplies the proof record.
 
-**Why violations?** Trust requires accountability. Prove Before Act detects anomalies (gaps, burst patterns) and records violations on Base via smart contracts. Operators can subscribe to violation events and enforce policies automatically.
+**Why violations?** Operators can use recorded violations as an accountability signal when the relevant Base integration is deployed and active. Confirm contract and event availability from the live documentation before automating a policy.
 
 ## Pricing
 
