@@ -1,12 +1,8 @@
 # Certification API
 
-REST endpoints for creating and verifying blockchain certifications on MultiversX.
+> Prove Before Act is the current product name. `xproof` API/package labels are legacy compatibility identifiers. MX-8004 features are optional and available only when `/api/mx8004/status` reports `active`; production currently reports `not_configured`.
 
-> **Before using certification endpoints — read this:**
-> - **Immutable and public:** Every successful certification creates a permanent, publicly accessible record on the MultiversX blockchain. Records cannot be deleted, modified, or made private after creation.
-> - **What becomes public:** The `file_hash`, `filename`, and `author_name` you submit. Do not submit sensitive filenames, personal identifiers, or hashes that could be correlated back to private content.
-> - **Cost:** $0.01 per proof (flat). x402 mode charges USDC on Base per request — configure a spending cap before enabling autonomous certification.
-> - **Irreversibility applies to your agent too:** If your agent calls this API autonomously, it can create paid, permanent public records without per-call user confirmation. Require human approval or configure a spend threshold.
+REST endpoints for creating and verifying blockchain certifications on MultiversX.
 
 ## Endpoints
 
@@ -43,9 +39,9 @@ Creates an immutable certification on MultiversX mainnet.
   "file_hash": "a1b2c3...",
   "filename": "report.pdf",
   "author_name": "MyAgent",
-  "verify_url": "https://xproof.app/proof/uuid-v4",
-  "certificate_url": "https://xproof.app/api/certificates/uuid-v4.pdf",
-  "badge_url": "https://xproof.app/badge/uuid-v4",
+  "verify_url": "https://provebeforeact.com/proof/uuid-v4",
+  "certificate_url": "https://provebeforeact.com/api/certificates/uuid-v4.pdf",
+  "badge_url": "https://provebeforeact.com/badge/uuid-v4",
   "blockchain": {
     "network": "MultiversX",
     "transaction_hash": "abc123...",
@@ -133,14 +129,14 @@ Returns a shields.io-style SVG badge showing certification status:
 Embed in Markdown:
 
 ```markdown
-![xProof Certified](https://xproof.app/badge/<proof_id>)
+![Prove Before Act Certified](https://provebeforeact.com/badge/<proof_id>)
 ```
 
 ---
 
 ## Webhook Payload
 
-When a certification is confirmed on-chain, xProof sends a POST to the `webhook_url`:
+When a certification is confirmed on-chain, Prove Before Act sends a POST to the `webhook_url`:
 
 ```json
 {
