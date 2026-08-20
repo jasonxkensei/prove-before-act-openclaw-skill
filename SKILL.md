@@ -227,7 +227,7 @@ curl -X POST https://provebeforeact.com/api/proof \
   -d '{
     "file_hash": "a1b2c3...",
     "filename": "output.json",
-    "webhook_url": "https://your-agent.example.com/hooks/xproof"
+    "webhook_url": "https://your-agent.example.com/webhooks/prove-before-act"
   }'
 ```
 
@@ -244,7 +244,7 @@ The violation flow is optional and deployment-dependent. Confirm the live contra
 | `gap` (fault) | Deployment-defined | Potential inactive-session gap |
 | `burst` (breach) | Deployment-defined | Potential abnormal submission pattern |
 
-Legacy compatibility contract paths: [XProofViolations.sol](https://github.com/jasonxkensei/prove-before-act/blob/main/contracts/XProofViolations.sol) | [ViolationWatcher.sol](https://github.com/jasonxkensei/prove-before-act/blob/main/contracts/ViolationWatcher.sol)
+Deployed Base contract sources retain their legacy Solidity names and cannot be renamed on-chain: [XProofViolations.sol](https://github.com/jasonxkensei/prove-before-act/blob/main/contracts/XProofViolations.sol) | [ViolationWatcher.sol](https://github.com/jasonxkensei/prove-before-act/blob/main/contracts/ViolationWatcher.sol)
 
 Docs: [https://provebeforeact.com/docs/base-violations](https://provebeforeact.com/docs/base-violations)
 
