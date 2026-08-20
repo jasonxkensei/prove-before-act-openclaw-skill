@@ -1,16 +1,16 @@
 ---
 name: Prove Before Act
-version: 3.3.8
-description: Prove Before Act accountability integration for AI agents. REST API, MCP, and x402. Check live endpoints for available capabilities, pricing, and proof status.
+version: 3.3.9
+description: Prove Before Act accountability integration for AI agents. REST API, MCP, and x402. The @jasonxkensei/xproof ClawHub slug is a legacy compatibility identifier.
 homepage: https://provebeforeact.com
 metadata: {"prove-before-act": {"category":"proof,security,compliance,accountability,prove-before-act","api_base":"https://provebeforeact.com"}}
 ---
 
-# Prove Before Act -- Prove Before & After Act — Accountability Layer for AI Agents
+# Prove Before Act — Accountability Layer for AI Agents
 
 This skill describes how to anchor reasoning (WHY) before an action and its result (WHAT) afterwards with Prove Before Act. It provides an auditable record when the returned proof is confirmed; it does not itself enforce an execution policy.
 
-> **Current product and compatibility notice:** Prove Before Act is the product name. `xproof`, `XProofClient`, `XPROOF_*`, `xProof-Action`, and `jasonxkensei/xProof` are legacy package, protocol, action, or repository identifiers retained for compatibility. MX-8004 support is not active unless `GET /api/mx8004/status` reports `status: "active"`; the current production response is `status: "not_configured"`.
+> **Current product and compatibility notice:** Prove Before Act is the product name. The ClawHub install slug `@jasonxkensei/xproof` is retained as a legacy compatibility identifier for existing OpenClaw installations. `xproof`, `XProofClient`, `XPROOF_*`, `xProof-Action`, and `jasonxkensei/xProof` are legacy package, protocol, action, or repository identifiers retained for compatibility. MX-8004 support is not active unless `GET /api/mx8004/status` reports `status: "active"`; the current production response is `status: "not_configured"`.
 
 ## The Core Pattern: Prove Before & After Act
 
@@ -71,6 +71,15 @@ done
 ```
 
 > **Source verification:** All files above are served from `github.com/jasonxkensei/prove-before-act` — the same repository that contains the server code, contracts, and SDKs. You can audit the full source at that URL before installing.
+
+## First successful integration
+
+Use this four-step path to create a verified record without exposing the original content:
+
+1. **Install** — use the ClawHub command shown on this page. Its `@jasonxkensei/xproof` slug is legacy; the installed skill and product are **Prove Before Act**.
+2. **Hash locally** — compute a SHA-256 hash of the decision or output. Do not send raw text, files, prompts, or credentials.
+3. **Anchor** — call `certify_file` through MCP or `POST /api/proof` with the hash and a filename.
+4. **Verify before relying on it** — retain the returned `proof_id` and use `verify_proof` or `GET /api/proof/<proof_id>` until the status is confirmed. Your own operator policy decides whether to continue, retry, request review, or block an action.
 
 ## Data & Privacy
 
