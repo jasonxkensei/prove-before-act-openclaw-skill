@@ -1,6 +1,6 @@
 ---
 name: Prove Before Act
-version: 3.3.10
+version: 3.3.11
 description: Prove Before Act accountability integration for AI agents. REST API, MCP, and x402. The @jasonxkensei/xproof ClawHub slug is a legacy compatibility identifier.
 homepage: https://provebeforeact.com
 metadata: {"prove-before-act": {"category":"proof,security,compliance,accountability,prove-before-act","api_base":"https://provebeforeact.com"}}
@@ -54,8 +54,6 @@ Payment: USDC on Base (x402, no account) or EGLD on MultiversX (ACP/wallet) or p
 
 ## Quick Install
 
-The source repository is `jasonxkensei/prove-before-act`; historical xProof links redirect here.
-
 ```bash
 mkdir -p .agent/skills/prove-before-act/references
 
@@ -70,7 +68,7 @@ for f in certification x402 mcp; do
 done
 ```
 
-> **Source verification:** All files above are served from `github.com/jasonxkensei/prove-before-act` — the same repository that contains the server code, contracts, and SDKs. You can audit the full source at that URL before installing.
+> **Source verification:** All files above are served from `github.com/jasonxkensei/prove-before-act` — the canonical repository for the server code, contracts, and SDKs.
 
 ## First successful integration
 
@@ -109,7 +107,7 @@ Use this four-step path to create a verified record without exposing the origina
 - **NEVER send plaintext content to provebeforeact.com** -- always hash locally first (`sha256sum`, `crypto.subtle.digest`, or equivalent). The only field Prove Before Act accepts is `file_hash` (64-char SHA-256 hex). No raw text, documents, or binary data should ever leave your environment.
 - **x402 is opt-in and autonomous** -- once enabled, your agent can initiate USDC payments on Base without per-transaction confirmation. Configure a spending cap in your agent framework and require human approval above your threshold before enabling x402 in production.
 - **`llms.txt` and `llms-full.txt` are static documentation references** -- load them once at install time for API reference, not at runtime on every call. Fetching them dynamically on each invocation creates an unnecessary runtime dependency on provebeforeact.com availability and a potential prompt-injection surface if the file is ever compromised.
-- **Guard/enforcement templates are versioned in the repository** -- never fetch agent enforcement code from a runtime URL. Use the pinned versions in `references/` or the SDK packages (`xproof` on PyPI, `prove-before-act` on npm).
+- **Guard/enforcement templates are versioned in the repository** -- never fetch agent enforcement code from a runtime URL. Use the pinned versions in `references/` or the canonical `prove-before-act` SDK package on PyPI and npm. The Python `xproof` module name remains a legacy compatibility alias.
 
 ---
 
@@ -119,8 +117,8 @@ Use this four-step path to create a verified record without exposing the origina
 
 ```bash
 # ---- Prove Before Act ---------------------------------------------------------------
-PROVEBEFOREACT_API_KEY="pm_..."                          # Your API key (from provebeforeact.com)
-PROVEBEFOREACT_BASE_URL="https://provebeforeact.com"             # Production endpoint
+XPROOF_API_KEY="pm_..."                          # Your API key (from provebeforeact.com)
+XPROOF_BASE_URL="https://provebeforeact.com"             # Production endpoint
 ```
 
 Get an API key at [provebeforeact.com](https://provebeforeact.com) (connect wallet, go to Settings > API Keys).
@@ -236,7 +234,7 @@ curl -X POST https://provebeforeact.com/api/proof \
   -d '{
     "file_hash": "a1b2c3...",
     "filename": "output.json",
-    "webhook_url": "https://your-agent.example.com/hooks/xproof"
+    "webhook_url": "https://your-agent.example.com/webhooks/prove-before-act"
   }'
 ```
 
@@ -253,7 +251,7 @@ The violation flow is optional and deployment-dependent. Confirm the live contra
 | `gap` (fault) | Deployment-defined | Potential inactive-session gap |
 | `burst` (breach) | Deployment-defined | Potential abnormal submission pattern |
 
-Legacy compatibility contract paths: [XProofViolations.sol](https://github.com/jasonxkensei/prove-before-act/blob/main/contracts/XProofViolations.sol) | [ViolationWatcher.sol](https://github.com/jasonxkensei/prove-before-act/blob/main/contracts/ViolationWatcher.sol)
+Deployed Base contract sources retain their legacy Solidity names and cannot be renamed on-chain: [XProofViolations.sol](https://github.com/jasonxkensei/prove-before-act/blob/main/contracts/XProofViolations.sol) | [ViolationWatcher.sol](https://github.com/jasonxkensei/prove-before-act/blob/main/contracts/ViolationWatcher.sol)
 
 Docs: [https://provebeforeact.com/docs/base-violations](https://provebeforeact.com/docs/base-violations)
 
